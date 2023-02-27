@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import Card from '@/components/Card.vue'
 import MobileNav from '@/components/navbar/MobileNav.vue'
 </script>
 
 <template>
-  <main>
+  <main class="h-screen bg-white-light">
     <nav>
       <MobileNav />
     </nav>
     <section class="px-4">
-      <div class="flex justify-between mt-20 md:container md:mx-auto md:px-10">
+      <div class="flex justify-between pt-4 pb-4 mt-16 md:container md:mx-auto md:px-10">
         <div class="inline-block">
           <h2 class="text-2xl font-bold">Invoices</h2>
           <p class="text-grey">7 Invoices</p>
@@ -24,7 +25,6 @@ import MobileNav from '@/components/navbar/MobileNav.vue'
               <li>Filter 3</li>
             </ul> -->
           </div>
-          <!-- <div class=""> -->
           <button class="self-center px-2 py-3 rounded-full bg-purple-light">
             <img
               class="inline-block h-10 p-3 rounded-full bg-white-light"
@@ -32,8 +32,10 @@ import MobileNav from '@/components/navbar/MobileNav.vue'
             />
             <span class="pl-2 pr-4 text-lg font-bold text-white-light">New</span>
           </button>
-          <!-- </div> -->
         </div>
+      </div>
+      <div class="py-4">
+        <Card />
       </div>
     </section>
   </main>
