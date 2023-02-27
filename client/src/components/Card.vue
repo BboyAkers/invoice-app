@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { defineComponent } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 </script>
@@ -17,4 +17,4 @@ import { RouterLink, RouterView } from 'vue-router'
       <slot />
     </div>
   </div>
-</template>
+</template> -->
