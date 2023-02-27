@@ -7,7 +7,7 @@
     </div>
     <div class="inline-flex h-full gap-5 rounded-r-xl">
       <img class="self-center h-6" src="@/assets/icon-moon.svg" alt="" />
-      <div class="border-l border-solid border-purple-extradark"></div>
+      <div class="border-l border-solid border-grey-dark"></div>
       <img class="self-center h-10 rounded-full" src="@/assets/image-avatar.jpg" alt="" />
     </div>
   </div>
