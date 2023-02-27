@@ -2,31 +2,45 @@
 module.exports = {
   content: [".index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ['"League Spartan", sans-serif'],
+    },
     extend: {
       colors: {
         purple: {
           light: '#9277FF',
-          default: '#7C5DFA',
-          dark: '#7E88C3'
+          DEFAULT: '#7C5DFA',
+          dark: '#7E88C3',
+
         },
         blue: {
           default: '#252945',
           dark: '#1E2139'
         },
+        green: {
+          light: '#F3FCF9',
+          DEFAULT: '#33D69F',
+        },
         grey: {
           light: '#DFE3FA',
-          default: '#888EB0',
+          DEFAULT: '#888EB0',
+          dark: '#373B53'
         },
         black: {
           light: '#141625',
-          default: '#0C0E16'
+          DEFAULT: '#0C0E16',
         },
         red: {
           light: '#9277FF',
-          default: '#EC5757',
+          DEFAULT: '#EC5757',
+        },
+        orange: {
+          light: '#FFF8F0',
+          DEFAULT: '#FF8F00'
         },
         white: {
-          light: '#F8F8FB'
+          light: '#F8F8FB',
+          DEFAULT: '#FFFFFF'
         }
       },
     },
