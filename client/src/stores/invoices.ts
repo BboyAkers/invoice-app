@@ -3,8 +3,8 @@ import invoicesData from '../data/invoices.json'
 
 interface Invoice {
   id: string
-  createdAt: Date
-  paymentDue: Date
+  createdAt: string
+  paymentDue: string
   description: string
   paymentTerms: number
   clientName: string
@@ -38,7 +38,7 @@ export const useInvoiceStore = defineStore('InvoiceStore', {
   },
   actions: {
     async loadInvoices() {
-      this.invoices = invoicesData
+      this.invoices = await invoicesData
     }
   }
 })
