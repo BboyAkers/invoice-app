@@ -36,6 +36,15 @@ export const useInvoiceStore = defineStore('InvoiceStore', {
       invoices: [] as Invoice[]
     }
   },
+
+  getters: {
+    count: (state) => state.invoices.length,
+
+    getInvoiceById: (state) => {
+      return (id: string) => state.invoices.find((invoice) => invoice.id === id)
+    }
+  },
+
   actions: {
     async loadInvoices() {
       this.invoices = await invoicesData
