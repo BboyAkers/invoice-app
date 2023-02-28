@@ -3,9 +3,9 @@ import { useRoute } from 'vue-router'
 import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 import { storeToRefs } from 'pinia'
+
+//@ts-ignore
 import * as IconArrowLeft from '@/assets/icon-arrow-left.svg?component'
-// import { computed } from 'vue'
-// import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 
