@@ -3,8 +3,9 @@ import { useRoute } from 'vue-router'
 import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 import { storeToRefs } from 'pinia'
-// import { computed } from 'vue'
-// import { storeToRefs } from 'pinia'
+
+//@ts-ignore
+import * as IconArrowLeft from '@/assets/icon-arrow-left.svg?component'
 
 const route = useRoute()
 
@@ -19,6 +20,11 @@ console.log(invoiceDetail)
 
 <template>
   <div>
+    <RouterLink to="/">
+      <p class="inline-block text-lg font-bold">
+        <IconArrowLeft class="inline-block mr-2" />Go Back
+      </p>
+    </RouterLink>
     <Card class="mb-6">
       <div class="flex justify-between">
         <div class="flex">
@@ -88,16 +94,15 @@ console.log(invoiceDetail)
         >
           <div>
             <p class="font-bold">{{ item.name }}</p>
-            <p class="font-bold text-purple-dark">{{ item.quantity }} x ${{ item.price }}</p>
-          </div>
-          <div class="self-center">
-            <p class="font-bold">$156.00</p>
+            <p class="font-bold text-purple-dark">
+              {{ item.quantity }} x ${{ item.price.toFixed(2) }}
+            </p>
           </div>
         </div>
       </div>
       <div class="flex justify-between p-4 rounded-b-lg bg-grey-dark text-white-light">
         <p class="self-center">Grand Total</p>
-        <p class="text-2xl font-bold">${{ invoiceDetail?.total }}</p>
+        <p class="text-2xl font-bold">${{ invoiceDetail?.total.toFixed(2) }}</p>
       </div>
     </Card>
   </div>
