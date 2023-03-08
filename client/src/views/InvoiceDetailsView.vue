@@ -4,9 +4,6 @@ import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 import { storeToRefs } from 'pinia'
 
-//@ts-ignore
-import * as IconArrowLeft from '@/assets/icon-arrow-left.svg?component'
-
 const route = useRoute()
 
 const invoiceStore = useInvoiceStore()
@@ -22,7 +19,11 @@ console.log(invoiceDetail)
   <div>
     <RouterLink to="/">
       <p class="inline-block text-lg font-bold">
-        <IconArrowLeft class="inline-block mr-2" />Go Back
+        <img
+          src="@/assets/icon-arrow-left.svg"
+          class="inline-block h-10 p-3 rounded-full bg-white-light"
+        />
+        Go Back
       </p>
     </RouterLink>
     <Card class="mb-6">
