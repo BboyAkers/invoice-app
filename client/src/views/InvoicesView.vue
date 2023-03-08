@@ -2,6 +2,8 @@
 import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 
+//TODO: use vite-svg-loader for svgs and play around with svg sizing
+
 const invoiceStore = useInvoiceStore()
 invoiceStore.loadInvoices()
 </script>
@@ -25,8 +27,8 @@ invoiceStore.loadInvoices()
         </div>
         <button class="self-center px-2 py-3 rounded-full bg-purple-light">
           <img
-            class="inline-block h-10 p-3 rounded-full bg-white-light"
             src="@/assets/icon-plus.svg"
+            class="inline-block h-10 p-3 rounded-full bg-white-light"
           />
           <span class="pl-2 pr-4 text-lg font-bold text-white-light">New</span>
         </button>
