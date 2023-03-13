@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router'
 import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 import { storeToRefs } from 'pinia'
+import InvoiceDetailsFooter from '@/components/footer/InvoiceDetailsFooter.vue'
 
 const route = useRoute()
 
@@ -11,12 +12,10 @@ const { getInvoiceById } = storeToRefs(invoiceStore)
 
 const invoiceId = route.params.id as unknown
 const invoiceDetail = getInvoiceById.value(invoiceId as string)
-
-console.log(invoiceDetail)
 </script>
 
 <template>
-  <div>
+  <div class="pb-24">
     <RouterLink to="/">
       <p class="inline-block text-lg font-bold">
         <img
@@ -106,5 +105,6 @@ console.log(invoiceDetail)
         <p class="text-2xl font-bold">${{ invoiceDetail?.total.toFixed(2) }}</p>
       </div>
     </Card>
+    <InvoiceDetailsFooter />
   </div>
 </template>
