@@ -98,6 +98,9 @@ const invoiceDetail = getInvoiceById.value(invoiceId as string)
               {{ item.quantity }} x ${{ item.price.toFixed(2) }}
             </p>
           </div>
+          <div class="flex items-center pr-4 font-bold text-center">
+            <p>${{ item.total.toFixed(2) }}</p>
+          </div>
         </div>
       </div>
       <div class="flex justify-between p-4 rounded-b-lg bg-grey-dark text-white-light">
