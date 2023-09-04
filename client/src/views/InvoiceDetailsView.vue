@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router'
 import Card from '@/components/Card.vue'
 import { useInvoiceStore } from '@/stores/invoices'
 import { storeToRefs } from 'pinia'
+import InvoiceDetailsFooter from '@/components/footer/InvoiceDetailsFooter.vue'
 
 const route = useRoute()
 
@@ -11,12 +12,10 @@ const { getInvoiceById } = storeToRefs(invoiceStore)
 
 const invoiceId = route.params.id as unknown
 const invoiceDetail = getInvoiceById.value(invoiceId as string)
-
-console.log(invoiceDetail)
 </script>
 
 <template>
-  <div>
+  <div class="pb-24">
     <RouterLink to="/">
       <p class="inline-block text-lg font-bold">
         <img
@@ -52,11 +51,11 @@ console.log(invoiceDetail)
       </div>
     </Card>
     <Card>
-      <div class="flex">
-        <div class="flex-1">
-          <h3 class="text-lg font-bold text-grey-dark">
-            <span class="text-purple-light">#</span>{{ invoiceDetail?.id }}
-          </h3>
+      <div class="grid grid-cols-2 gap-3">
+        <h3 class="text-lg font-bold text-grey-dark">
+          <span class="text-purple-light">#</span>{{ invoiceDetail?.id }}
+        </h3>
+        <div class="col-span-2">
           <div class="pb-4 text-grey">
             <p>{{ invoiceDetail?.description }}</p>
             <p>{{ invoiceDetail?.senderAddress.street }}</p>
@@ -64,6 +63,8 @@ console.log(invoiceDetail)
             <p>{{ invoiceDetail?.senderAddress.postCode }}</p>
             <p>{{ invoiceDetail?.senderAddress.country }}</p>
           </div>
+        </div>
+        <div class="col-span-1">
           <div class="pb-4">
             <p class="text-grey">Invoice Date</p>
             <p class="font-bold text-grey-dark">{{ invoiceDetail?.createdAt }}</p>
@@ -77,14 +78,16 @@ console.log(invoiceDetail)
             <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientEmail }}</p>
           </div>
         </div>
-        <div class="flex-1 text-grey">
-          <p>Bill To</p>
-          <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientName }}</p>
-          <p>{{ invoiceDetail?.clientEmail }}</p>
-          <p>{{ invoiceDetail?.clientAddress.street }}</p>
-          <p>{{ invoiceDetail?.clientAddress.city }}</p>
-          <p>{{ invoiceDetail?.clientAddress.postCode }}</p>
-          <p>{{ invoiceDetail?.clientAddress.country }}</p>
+        <div class="col-span-1">
+          <div class="flex-1 text-grey">
+            <p>Bill To</p>
+            <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientName }}</p>
+            <p>{{ invoiceDetail?.clientEmail }}</p>
+            <p>{{ invoiceDetail?.clientAddress.street }}</p>
+            <p>{{ invoiceDetail?.clientAddress.city }}</p>
+            <p>{{ invoiceDetail?.clientAddress.postCode }}</p>
+            <p>{{ invoiceDetail?.clientAddress.country }}</p>
+          </div>
         </div>
       </div>
       <div class="p-4 mt-8 rounded-md bg-white-light">
@@ -106,5 +109,6 @@ console.log(invoiceDetail)
         <p class="text-2xl font-bold">${{ invoiceDetail?.total.toFixed(2) }}</p>
       </div>
     </Card>
+    <InvoiceDetailsFooter />
   </div>
 </template>
