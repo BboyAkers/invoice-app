@@ -51,11 +51,11 @@ const invoiceDetail = getInvoiceById.value(invoiceId as string)
       </div>
     </Card>
     <Card>
-      <div class="flex">
-        <div class="flex-1">
-          <h3 class="text-lg font-bold text-grey-dark">
-            <span class="text-purple-light">#</span>{{ invoiceDetail?.id }}
-          </h3>
+      <div class="grid grid-cols-2 gap-3">
+        <h3 class="text-lg font-bold text-grey-dark">
+          <span class="text-purple-light">#</span>{{ invoiceDetail?.id }}
+        </h3>
+        <div class="col-span-2">
           <div class="pb-4 text-grey">
             <p>{{ invoiceDetail?.description }}</p>
             <p>{{ invoiceDetail?.senderAddress.street }}</p>
@@ -63,6 +63,8 @@ const invoiceDetail = getInvoiceById.value(invoiceId as string)
             <p>{{ invoiceDetail?.senderAddress.postCode }}</p>
             <p>{{ invoiceDetail?.senderAddress.country }}</p>
           </div>
+        </div>
+        <div class="col-span-1">
           <div class="pb-4">
             <p class="text-grey">Invoice Date</p>
             <p class="font-bold text-grey-dark">{{ invoiceDetail?.createdAt }}</p>
@@ -76,14 +78,16 @@ const invoiceDetail = getInvoiceById.value(invoiceId as string)
             <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientEmail }}</p>
           </div>
         </div>
-        <div class="flex-1 text-grey">
-          <p>Bill To</p>
-          <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientName }}</p>
-          <p>{{ invoiceDetail?.clientEmail }}</p>
-          <p>{{ invoiceDetail?.clientAddress.street }}</p>
-          <p>{{ invoiceDetail?.clientAddress.city }}</p>
-          <p>{{ invoiceDetail?.clientAddress.postCode }}</p>
-          <p>{{ invoiceDetail?.clientAddress.country }}</p>
+        <div class="col-span-1">
+          <div class="flex-1 text-grey">
+            <p>Bill To</p>
+            <p class="font-bold text-grey-dark">{{ invoiceDetail?.clientName }}</p>
+            <p>{{ invoiceDetail?.clientEmail }}</p>
+            <p>{{ invoiceDetail?.clientAddress.street }}</p>
+            <p>{{ invoiceDetail?.clientAddress.city }}</p>
+            <p>{{ invoiceDetail?.clientAddress.postCode }}</p>
+            <p>{{ invoiceDetail?.clientAddress.country }}</p>
+          </div>
         </div>
       </div>
       <div class="p-4 mt-8 rounded-md bg-white-light">

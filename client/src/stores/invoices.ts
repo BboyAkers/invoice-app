@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import invoicesData from '../data/invoices.json'
 
-interface Invoice {
+type Invoice = {
   id: string
   createdAt: string
   paymentDue: string
@@ -16,14 +16,14 @@ interface Invoice {
   total: number
 }
 
-interface Address {
+type Address = {
   street: string
   city: string
   postCode: string
   country: string
 }
 
-interface Item {
+type Item = {
   name: string
   quantity: number
   price: number
