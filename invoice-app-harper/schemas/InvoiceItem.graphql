@@ -1,0 +1,7 @@
+type InvoiceItem @table {
+  id: ID @primaryKey
+  name: String
+  quantity: Int
+  price: Float
+  total: Float
+}

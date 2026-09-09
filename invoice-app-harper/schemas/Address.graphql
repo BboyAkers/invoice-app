@@ -1,0 +1,7 @@
+type Address @table {
+  id: ID @primaryKey
+  street: String
+  city: String
+  postCode: String
+  country: String
+}

@@ -1,0 +1,704 @@
+# Rules manifest for the harper-best-practices skill.
+#
+# Declarative source of truth for rule taxonomy, sources, and generation mode.
+# Owned by humans; the generator reads this file and writes derived artifacts
+# (rule bodies, AGENTS.md). See docs/plans-archive/docs-driven-skills.md for the
+# full schema definition and Manifest ↔ frontmatter reconciliation semantics.
+#
+# Phase 2 flipped vector-indexing to mode: generate.
+# Phase 3 flips 7 obvious 1:1 rules to mode: generate (automatic-apis,
+# querying-rest-apis, real-time-apps, checking-authentication, logging,
+# deploying-to-harper-fabric, caching). All others remain synthesized.
+# Phase 4 migrates schema-design-tooling and typescript-type-stripping to
+# mode: generate. creating-harper-apps stays synthesized pending dedicated
+# create-harper CLI documentation.
+
+rules:
+  # ===========================================================================
+  # Schema & Data Design (priority 1 — HIGH)
+  # ===========================================================================
+
+  - rule: adding-tables-with-schemas
+    description: Guidelines for adding tables to a Harper database using GraphQL schemas.
+    category: schema
+    priority: 1
+    order: 1
+    mode: synthesized
+
+  - rule: schema-design-tooling
+    description: Best practices for Harper schema design, including core directives and GraphQL tooling configuration.
+    category: schema
+    priority: 1
+    order: 2
+    mode: generate
+    sources:
+      - path: reference/v5/database/schema.md
+        section: "Overview"
+        role: primary
+      - path: reference/v5/database/schema.md
+        section: "Type Directives"
+        role: primary
+      - path: reference/v5/database/schema.md
+        section: "Field Directives"
+        role: primary
+    must_cover:
+      - "@table"
+      - "@export"
+      - "@primaryKey"
+      - "@indexed"
+      - "graphqlSchema"
+
+  - rule: defining-relationships
+    description: How to define and use relationships between tables in Harper using GraphQL.
+    category: schema
+    priority: 1
+    order: 3
+    mode: generate
+    sources:
+      - path: reference/v5/database/schema.md
+        section: "Relationships"
+        role: primary
+      - path: reference/v5/rest/querying.md
+        section: "Relationships and Joins"
+        role: supplemental
+    must_cover:
+      - "@relationship"
+      - "from"
+      - "to"
+      - "one-to-many"
+      - "many-to-one"
+
+  - rule: vector-indexing
+    description: How to enable and query vector indexes for similarity search in Harper.
+    category: schema
+    priority: 1
+    order: 4
+    mode: generate
+    sources:
+      - path: reference/v5/database/schema.md
+        section: "Vector Indexing"
+        role: primary
+    must_cover:
+      - '@indexed(type: "HNSW")'
+      - "sort"
+      - "target"
+      - "cosine"
+      - "efConstruction"
+    cross_links:
+      - adding-tables-with-schemas
+
+  - rule: using-blob-datatype
+    description: How to use the Blob data type for efficient binary storage in Harper.
+    category: schema
+    priority: 1
+    order: 5
+    mode: generate
+    sources:
+      - path: reference/v5/database/schema.md
+        section: "Blob Type"
+        role: primary
+      - path: reference/v5/database/api.md
+        section: "Streaming"
+        role: supplemental
+      - path: reference/v5/database/api.md
+        section: "`BlobOptions`"
+        role: supplemental
+      - path: reference/v5/database/api.md
+        section: "Blob Coercion"
+        role: supplemental
+    must_cover:
+      - "Blob"
+      - "createBlob"
+      - "saveBeforeCommit"
+      - ".bytes()"
+    cross_links:
+      - handling-binary-data
+
+  - rule: handling-binary-data
+    description: How to store and serve binary data like images or audio in Harper.
+    category: schema
+    priority: 1
+    order: 6
+    mode: generate
+    sources:
+      - path: reference/v5/database/api.md
+        section: "Accepting Binary in JSON Requests"
+        role: primary
+      - path: reference/v5/database/api.md
+        section: "Serving Binary from a Resource"
+        role: primary
+      - path: reference/v5/rest/content-types.md
+        section: "Storing Arbitrary Content Types"
+        role: supplemental
+    must_cover:
+      - "createBlob"
+      - "Content-Type"
+      - "application/octet-stream"
+      - "base64"
+    cross_links:
+      - using-blob-datatype
+
+  # ===========================================================================
+  # API & Communication (priority 2 — HIGH)
+  # ===========================================================================
+
+  - rule: automatic-apis
+    description: How to use Harper's automatically generated REST and WebSocket APIs.
+    category: api
+    priority: 2
+    order: 1
+    mode: generate
+    sources:
+      # overview.md is sourced section-by-section rather than whole-file: at
+      # ~15KB it was the largest single input in the skill, and the compression
+      # dropped conditional requests, content negotiation, and the `GET`
+      # caveats outright. Listing sections narrows the input and makes a docs
+      # rename fail loudly in sliceSection. The dropped headings are the
+      # `# REST Overview` preamble (marketing + a version badge) and
+      # `## See Also` (link list); `## OpenAPI` is kept because the rule
+      # documents `GET /openapi`.
+      - path: reference/v5/rest/overview.md
+        section: "How the REST Interface Works"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "Configuration"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "Tables and Their Automatic Endpoints"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "URL Structure"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "HTTP Methods"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "Content Types"
+        role: primary
+      - path: reference/v5/rest/overview.md
+        section: "OpenAPI"
+        role: supplemental
+      - path: reference/v5/rest/websockets.md
+        role: supplemental
+    must_cover:
+      - "rest: true"
+      - "@export"
+      - "WebSocket"
+      # Each of the following occurs exactly once across the sourced sections,
+      # so each pins one previously-dropped section:
+      #   If-None-Match / 304 Not Modified → `#### Conditional Requests and Caching`
+      #   `Accept`                         → `## Content Types` (bare `Accept`
+      #     would be satisfied by the SSE `Accept: text/event-stream` mention
+      #     under `## Tables and Their Automatic Endpoints`, which gates nothing)
+      #   .msgpack                         → the reserved content-type selector
+      #     suffixes and the undeclared-property caveat in `### GET`
+      - "If-None-Match"
+      - "304 Not Modified"
+      - "ETag"
+      - "`Accept`"
+      - ".msgpack"
+      # Pinned after the first regen dropped them while restoring the three
+      # sections above — an unanchored fact is only ever one regen from being
+      # compressed away, whichever fact it is:
+      #   Location (2×)     → the primary key POST returns in that header
+      #   @updatedTime (1×) → the three exceptions PUT always applies
+      - "Location"
+      - "@updatedTime"
+    cross_links:
+      - querying-rest-apis
+      - real-time-apps
+
+  - rule: querying-rest-apis
+    description: How to use query parameters to filter, sort, and paginate Harper REST APIs.
+    category: api
+    priority: 2
+    order: 2
+    mode: generate
+    sources:
+      - path: reference/v5/rest/querying.md
+        role: primary
+    must_cover:
+      - "=gt="
+      - "=lt="
+      - "select("
+      - "sort("
+      - "limit("
+    cross_links:
+      - automatic-apis
+
+  - rule: real-time-apps
+    description: How to build real-time features in Harper using WebSockets and Pub/Sub.
+    category: api
+    priority: 2
+    order: 3
+    mode: generate
+    sources:
+      - path: reference/v5/rest/websockets.md
+        role: primary
+    must_cover:
+      - "WebSocket"
+      - "connect("
+    cross_links:
+      - automatic-apis
+
+  - rule: checking-authentication
+    description: How to handle user authentication and sessions in Harper Resources.
+    category: api
+    priority: 2
+    order: 4
+    mode: generate
+    sources:
+      - path: reference/v5/resources/resource-api.md
+        section: "`getCurrentUser(): User | undefined`"
+        role: primary
+      # Sourced for the `getContext()` anchor below, which was unsatisfiable
+      # without it: `getContext()` does not occur in any other sourced section
+      # (`Session and Login from a Resource` uses the `(target, data, context)`
+      # trailing-argument form throughout), so the anchor demanded a string the
+      # model could only invent — and the system prompt forbids inventing, so
+      # every run failed validation instead. This section also carries the
+      # instance-vs-static contract the rule needs: `getContext()` is an
+      # instance method, and a static verb must read the context from its
+      # trailing argument or use the `harper` module export.
+      - path: reference/v5/resources/resource-api.md
+        section: "`getContext(): Context`"
+        role: supplemental
+      - path: reference/v5/resources/resource-api.md
+        section: "Session and Login from a Resource"
+        role: primary
+      # JWT half. Sectioned *and* anchored deliberately.
+      #
+      # The generator concatenates every resolved source into one unlabeled
+      # blob (lib/sources.mjs `resolveSources`) and the system prompt tells the
+      # model to "keep it tight" and omit tangential detail. So whatever no
+      # `must_cover` anchor requires is exactly what gets compressed away —
+      # anchor starvation, not source ordering or size. As a whole-file source
+      # with no JWT anchors, this half collapsed to a single "use JWT instead"
+      # pointer and lost the token issue/refresh flow entirely.
+      #
+      # `must_cover` is the actual gate: it is enforced verbatim
+      # (validate-generated.mjs, `body.includes(must)`) and is echoed to the
+      # model as a hard requirement. `section:` only narrows what gets fed in —
+      # it helps because it tends to come with anchors, not on its own. Prefer
+      # identifier-shaped anchors that occur in exactly one sourced section; an
+      # anchor matching many sections gates nothing in particular.
+      #
+      # `role:` is a human-facing annotation only — the generator never reads
+      # it (it is enum-checked by the validator and otherwise unused).
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Create Authentication Tokens"
+        role: primary
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Using the Operation Token"
+        role: supplemental
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Refreshing the Operation Token"
+        role: primary
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Scoped Tokens (Inline Role)"
+        role: primary
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Issuing Tokens from a Custom Resource"
+        role: primary
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Token Expiry Configuration"
+        role: supplemental
+      # Sourced so the rule carries the *negative* recommendation too. Without
+      # it the generated body pushed JWT at every non-browser client, while the
+      # source actually points simple and server-to-server callers at Basic
+      # Authentication — i.e. the rule was inviting token lifecycle complexity
+      # the docs tell you to avoid.
+      - path: reference/v5/security/jwt-authentication.md
+        section: "When to Use JWT Auth"
+        role: primary
+      - path: reference/v5/security/jwt-authentication.md
+        section: "Security Notes"
+        role: supplemental
+    must_cover:
+      # Session half.
+      - "getCurrentUser()"
+      - "getContext()"
+      - "context.login"
+      - "enableSessions"
+      # JWT half. One anchor per sourced section wherever an identifier is
+      # unique to it: `server.operation` pins the custom-resource section,
+      # `add_role`/`expires_in` the scoped-token section, `HTTPS` the security
+      # notes (`operationTokenTimeout` alone no longer distinguishes those two,
+      # since it occurs in both). `create_authentication_tokens` is the one
+      # unavoidably broad anchor — it is the subject of its own section but is
+      # back-referenced by three others, so it gates presence, not depth.
+      - "create_authentication_tokens"
+      - "refresh_operation_token"
+      - "server.operation"
+      - "add_role"
+      - "expires_in"
+      - "operationTokenTimeout"
+      - "HTTPS"
+      # Scoped tokens are rejected with a 401 by nodes too old to understand
+      # them. Unanchored, that bullet was dropped the first time this rule was
+      # regenerated after the section was added — a rollout hazard, so it gets
+      # its own anchor rather than relying on the section being sourced.
+      - "mixed-version"
+      # Operation names alone gate vocabulary, not mechanics: a regeneration
+      # could keep `create_authentication_tokens`/`refresh_operation_token` and
+      # still drop the token exchange, the refresh timeout, or what the third
+      # `server.operation` argument does. The anchors below pin those specific
+      # semantics. Each occurs exactly once in the doc and in exactly one
+      # sourced section, so it forces depth in that section rather than a
+      # passing mention anywhere.
+      #
+      # Two caveats this list is deliberately built around:
+      #
+      # 1. `must_cover` is a substring test (`body.includes(must)`), so an
+      #    anchor contained in another anchor gates nothing extra.
+      #    `operation_token` is already implied by `refresh_operation_token`,
+      #    and `refresh_token` by `Bearer <refresh_token>` — listing either
+      #    separately would be noise, not coverage.
+      # 2. A bare-fragment anchor invites literal satisfaction. Anchoring the
+      #    exchange as `Bearer <refresh_token>` — rather than `refresh_token`,
+      #    which occurs in three sourced sections — requires the body to show
+      #    the refresh token actually being presented as the Bearer credential.
+      #
+      # `third argument` + `current authenticated user` pin the authorize
+      # behavior together. `authorize: true` is the doc's prose name for it but
+      # is rejected as an anchor: the code passes `true` positionally, so
+      # forcing that string risks a body an agent transcribes as an options
+      # object.
+      - "Bearer <refresh_token>"
+      - "refreshTokenTimeout"
+      - "third argument"
+      - "current authenticated user"
+      # When to Use JWT Auth. `Basic Authentication` is a superstring of the
+      # plain `Basic Auth` the section also contains — which is the better
+      # anchor, since `Basic Auth` additionally appears in a code comment in
+      # the custom-resource section and could be satisfied from there while the
+      # recommendation itself stayed compressed away. `server-to-server` pins
+      # the scenario the source actually steers away from JWT.
+      #
+      # `preferred over Basic Auth` carries the source's *conditional* framing.
+      # It is anchored because sourcing the section alone was not enough: the
+      # body kept a flat "for non-browser clients, use JWT" directive and filed
+      # the Basic Auth alternative under Notes, which reads as a contradiction.
+      # Anchoring the conditional forces the choice to be stated as a tradeoff.
+      - "Basic Authentication"
+      - "server-to-server"
+      - "preferred over Basic Auth"
+    # Notation, not content. The old body wrote the dotted config path as one
+    # code span; the new one states the same requirement as a YAML block under
+    # `authentication:` plus prose, and the `enableSessions` anchor above still
+    # holds it. The fact-retention check compares whole code spans, so it
+    # cannot see that the two notations say the same thing.
+    allow_dropped:
+      - "authentication.enableSessions: true"
+    cross_links:
+      - custom-resources
+
+  # ===========================================================================
+  # Logic & Extension (priority 3 — MEDIUM)
+  # ===========================================================================
+
+  - rule: custom-resources
+    description: How to define custom REST endpoints with JavaScript or TypeScript in Harper.
+    category: logic
+    priority: 3
+    order: 1
+    mode: generate
+    sources:
+      - path: reference/v5/resources/overview.md
+        section: "Custom External Data Source"
+        role: primary
+      - path: reference/v5/resources/overview.md
+        section: "Exporting Resources as Endpoints"
+        role: primary
+      - path: reference/v5/components/javascript-environment.md
+        section: "Module Formats"
+        role: supplemental
+    must_cover:
+      - "extends Resource"
+      - "export class"
+      - "server.resources.set("
+      - "static"
+    # Both surfaced by the fact-retention check and both judged notation
+    # rather than content:
+    #
+    # `{param}` — the old body illustrated MCP URI templates as "`{param}`
+    #   URI templates"; the new one keeps the same sentence with a concrete
+    #   `/widget/{id}/action/{action}` example, which is strictly clearer.
+    #
+    # `databases` — came from a Notes bullet asserting that `tables` and
+    #   `databases` are the same live objects "regardless of which component
+    #   accesses them". `programmatic-table-requests` owns that topic, and the
+    #   globals-vs-import framing of that bullet was flagged as contentious
+    #   during the #84 review (the docs assert it in one place and caution
+    #   against globals in another), so it is not re-pinned here.
+    allow_dropped:
+      - "{param}"
+      - "databases"
+
+  - rule: extending-tables
+    description: How to add custom logic to automatically generated table resources in Harper.
+    category: logic
+    priority: 3
+    order: 2
+    mode: generate
+    sources:
+      - path: reference/v5/resources/overview.md
+        section: "Extending a Table"
+        role: primary
+      - path: reference/v5/resources/resource-api.md
+        section: "Throwing Errors"
+        role: supplemental
+    must_cover:
+      - "extends tables."
+      - "super."
+      - "@export"
+      - "statusCode"
+
+  - rule: programmatic-table-requests
+    description: How to interact with Harper tables programmatically using the `tables` object.
+    category: logic
+    priority: 3
+    order: 3
+    mode: generate
+    sources:
+      - path: reference/v5/database/api.md
+        section: "`tables`"
+        role: primary
+      - path: reference/v5/resources/resource-api.md
+        section: "Query Object"
+        role: primary
+      - path: reference/v5/database/api.md
+        section: "`transaction(context?, callback)`"
+        role: supplemental
+      - path: reference/v5/resources/resource-api.md
+        section: "`update(target: RequestTarget | Id, updates?: object): Promise<Resource>`"
+        role: supplemental
+      - path: reference/v5/resources/resource-api.md
+        section: "`addTo(property: string, value: number)`"
+        role: supplemental
+      - path: reference/v5/components/javascript-environment.md
+        section: "Module Formats"
+        role: supplemental
+    must_cover:
+      - "tables"
+      - "conditions"
+      - "search("
+      - "addTo"
+      - "select"
+      # Query Object options that were covered before the transaction material
+      # was pinned, and that the regen then compressed out to make room. They
+      # are anchored now rather than left to survive on luck; each occurs only
+      # in § Query Object. `sort` also carries the `@indexed`-or-`conditions`
+      # requirement and `allowFullScan`, which have no meaning without it.
+      - "sort"
+      - "@indexed"
+      - "explain"
+      - "enforceExecutionOrder"
+      # The `transaction(context?, callback)` source was already declared with a
+      # `section:` and was still dropped in full — proof that sectioning narrows
+      # the input but does not hold content in. Only an anchor does. Each of
+      # these occurs in exactly one sourced section:
+      #   transaction() (2×)     → § `transaction(context?, callback)`
+      #   resetReadSnapshot() (1×) → its `### Transaction Object` member table
+      #   atomicity (1×)         → `### Transaction Scope and Atomicity`
+      #   limit / offset (1× each) → § Query Object, the pagination pair
+      # Balanced parens deliberately: anchoring the bare `transaction(` also
+      # gates the section, but the model satisfies it literally and writes
+      # prose like "wrap background work in `transaction(`". `transaction()`
+      # contains `transaction(`, so it is the stricter anchor as well.
+      - "transaction()"
+      - "resetReadSnapshot()"
+      - "atomicity"
+      - "limit"
+      - "offset"
+      # § Module Formats' one piece of actionable build guidance: keep `harper`
+      # external when bundling for SSR, or it is bundled instead of resolving
+      # to the runtime. Only occurrence of `vite.config` in the sources.
+      - "vite.config"
+      # Both anchored after the fact-retention check caught this regeneration
+      # dropping them. The literal error string is how an agent matches the
+      # runtime failure to the fix; a body that only says "throws an error"
+      # (which is what regeneration produced) leaves it guessing. Anchored
+      # verbatim rather than as a `HdbError:` prefix, because retention
+      # compares whole code spans — a truncated variant would satisfy a short
+      # anchor and still register as a loss.
+      - "HdbError: <attribute> is not indexed and not combined with any other conditions"
+      - "npm link harper"
+    # The `txn` member table lost its Type column on regeneration. All four
+    # members and their behavior survived (and `resetReadSnapshot()` is
+    # anchored above), so what went is the type annotation, not the fact.
+    # Waived rather than anchored for two reasons: `number` is generic enough
+    # that requiring it pins nothing in particular, and the old `() => Promise`
+    # was already a degraded value — `commit()` returns `Promise<void>`, and
+    # the `<void>` had been stripped somewhere upstream of the rule.
+    #
+    # This is the fact-retention check's noise floor: it compares code spans,
+    # so a dropped table column reads the same as a dropped fact. Waiving is
+    # the intended response, and it stays visible here in review.
+    allow_dropped:
+      - "() => Promise"
+      - "() => void"
+      - "number"
+
+  - rule: typescript-type-stripping
+    description: How to run TypeScript files directly in Harper without a build step.
+    category: logic
+    priority: 3
+    order: 4
+    mode: generate
+    sources:
+      - path: reference/v5/components/javascript-environment.md
+        section: "TypeScript Support"
+        role: primary
+    must_cover:
+      - ".ts"
+      - "jsResource"
+      - "Node.js 22.6"
+      - "type stripping"
+
+  - rule: caching
+    description: How to implement integrated data caching in Harper from external sources.
+    category: logic
+    priority: 3
+    order: 5
+    mode: generate
+    sources:
+      - path: learn/developers/caching-with-harper.md
+        role: primary
+    must_cover:
+      - "expiration"
+      - "sourcedFrom"
+      - "@table"
+    cross_links:
+      - custom-resources
+      - automatic-apis
+
+  # ===========================================================================
+  # Infrastructure & Ops (priority 4 — MEDIUM)
+  # ===========================================================================
+
+  - rule: deploying-to-harper-fabric
+    description: How to deploy a Harper application to the Harper Fabric cloud.
+    category: ops
+    priority: 4
+    order: 1
+    mode: generate
+    sources:
+      - path: reference/v5/components/applications.md
+        section: "Remote Management"
+        role: primary
+      - path: fabric/cluster-creation-management.md
+        section: "Connecting the Harper CLI to a Cluster"
+        role: supplemental
+    must_cover:
+      - "harper deploy"
+      - "harper login"
+      # `### Provisioning a Deploy Credential` is already inside the sourced
+      # `## Remote Management` slice, and its security guidance was compressed
+      # away anyway. These anchors pin it; each occurs only in that slice:
+      #   fine-grained (2×) → prefer a fine-grained PAT over the `gh` CLI token
+      #   read:org (1×)     → the account-wide scopes the `gh` token carries
+      #   enc:v1: (1×)      → the client-side-encryption envelope
+      # They double as the rename detector for that subheading: if it is
+      # retitled or removed, the content goes and these anchors fail.
+      - "fine-grained"
+      - "Contents: Read-only"
+      - "read:org"
+      - "enc:v1:"
+      # Pinned after the first regen dropped it while restoring the credential
+      # guidance: `refs/heads/*` and `refs/tags/*` (or a bare branch/tag) are
+      # the only refs a `by_ref` deploy can fetch.
+      - "refs/tags"
+      # Also pinned after a regen dropped it: `setup=true` calls
+      # `get_secrets_public_key` / `set_secret` / `grant_secret`, so it must be
+      # run with an administrative credential, not the CI identity it
+      # provisions for. The source escapes it as `super\_user`; every generated
+      # body so far unescapes, so the anchor is the unescaped form.
+      - "super_user"
+    cross_links:
+      - creating-a-fabric-account-and-cluster
+
+  - rule: creating-a-fabric-account-and-cluster
+    description: How to create a Harper Fabric account, organization, and cluster.
+    category: ops
+    priority: 4
+    order: 2
+    mode: synthesized
+
+  - rule: creating-harper-apps
+    description: How to initialize a new Harper application using the CLI.
+    category: ops
+    priority: 4
+    order: 3
+    mode: synthesized
+
+  - rule: serving-web-content
+    description: How to serve static files and integrated Vite/React applications in Harper.
+    category: ops
+    priority: 4
+    order: 4
+    mode: synthesized
+
+  - rule: logging
+    description: Best practices for logging in Harper, including console capture, the granular logger interface, and programmatic log retrieval.
+    category: ops
+    priority: 4
+    order: 5
+    mode: generate
+    sources:
+      - path: reference/v5/logging/overview.md
+        role: primary
+      - path: reference/v5/logging/api.md
+        role: primary
+    must_cover:
+      - "console.log"
+      - "logger"
+      - "withTag("
+
+  - rule: load-env
+    description: How to load environment variables from .env files into a Harper application using the loadEnv plugin.
+    category: ops
+    priority: 4
+    order: 6
+    mode: generate
+    sources:
+      - path: reference/v5/environment-variables/overview.md
+        role: primary
+    must_cover:
+      - "loadEnv"
+      - "files"
+      - "process.env"
+      - "override"
+      - "config.yaml"
+
+  - rule: v5-upgrade
+    description: Breaking changes and recommended updates when migrating a Harper application to v5.
+    category: ops
+    priority: 4
+    order: 7
+    mode: generate
+    sources:
+      - path: release-notes/v5-lincoln/v5-migration.md
+        role: primary
+    must_cover:
+      - "from 'harper'"
+      - "allowInstallScripts"
+      - "loadedFromSource"
+      - "getContext"
+      - "allowedSpawnCommands"
+      - "saveBeforeCommit"
+      - "moduleLoader"
+      - "lockdown"
+      - "Table.get"
+      # `## Response Objects` had no anchor and was dropped in full. Every
+      # occurrence of `headers` in the whole-file source is in that section.
+      - "headers"
+
+  - rule: delegating-to-the-built-in-agent
+    description: How to delegate tasks to Harper's built-in agent via the CLI and the agent operations API.
+    category: ops
+    priority: 4
+    order: 8
+    mode: synthesized
+    cross_links:
+      - deploying-to-harper-fabric

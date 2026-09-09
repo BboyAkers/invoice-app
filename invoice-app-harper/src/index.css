@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/league-spartan";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "League Spartan Variable", "League Spartan", sans-serif;
+  --font-spartan: "League Spartan Variable", "League Spartan", sans-serif;
+
+  /* Figma Design System Colors (Node 0-9001) */
+  --color-purple: #7c5dfa;
+  --color-purple-light: #9277ff;
+  --color-navy: #1e2139;
+  --color-navy-light: #252945;
+  --color-lavender: #dfe3fa;
+  --color-cool-grey: #888eb0;
+  --color-glaucous: #7e88c3;
+  --color-night: #0c0e16;
+  --color-danger: #ec5757;
+  --color-danger-light: #ff9797;
+  --color-ghost: #f8f8fb;
+  --color-vulcan: #141625;
+  --color-charcoal: #373b53;
+
+  /* Status Colors */
+  --color-status-paid: #33d69f;
+  --color-status-pending: #ff8f00;
+
+  /* Semantic mappings */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+}
+
+:root {
+  --background: #f8f8fb;
+  --foreground: #0c0e16;
+  --card: #ffffff;
+  --card-foreground: #0c0e16;
+  --popover: #ffffff;
+  --popover-foreground: #0c0e16;
+  --primary: #7c5dfa;
+  --primary-foreground: #ffffff;
+  --primary-hover: #9277ff;
+  --secondary: #f9fafe;
+  --secondary-foreground: #7e88c3;
+  --secondary-hover: #dfe3fa;
+  --muted: #f9fafe;
+  --muted-foreground: #888eb0;
+  --accent: #f9fafe;
+  --accent-foreground: #7e88c3;
+  --destructive: #ec5757;
+  --destructive-foreground: #ffffff;
+  --destructive-hover: #ff9797;
+  --border: #dfe3fa;
+  --input: #dfe3fa;
+  --input-bg: #ffffff;
+  --ring: #7c5dfa;
+  --sidebar: #373b53;
+  --sidebar-foreground: #ffffff;
+  --sidebar-border: #494e6e;
+  --status-draft: #373b53;
+  --status-draft-bg: rgba(55, 59, 83, 0.08);
+}
+
+.dark {
+  --background: #141625;
+  --foreground: #ffffff;
+  --card: #1e2139;
+  --card-foreground: #ffffff;
+  --popover: #252945;
+  --popover-foreground: #ffffff;
+  --primary: #7c5dfa;
+  --primary-foreground: #ffffff;
+  --primary-hover: #9277ff;
+  --secondary: #252945;
+  --secondary-foreground: #dfe3fa;
+  --secondary-hover: #ffffff;
+  --muted: #252945;
+  --muted-foreground: #dfe3fa;
+  --accent: #252945;
+  --accent-foreground: #dfe3fa;
+  --destructive: #ec5757;
+  --destructive-foreground: #ffffff;
+  --destructive-hover: #ff9797;
+  --border: #252945;
+  --input: #252945;
+  --input-bg: #1e2139;
+  --ring: #7c5dfa;
+  --sidebar: #1e2139;
+  --sidebar-foreground: #ffffff;
+  --sidebar-border: #494e6e;
+  --status-draft: #dfe3fa;
+  --status-draft-bg: rgba(223, 227, 250, 0.08);
+}
+
+/* Typography Hierarchy (Figma 0-9001) */
+@utility text-heading-l {
+  font-size: 36px;
+  line-height: 33px;
+  letter-spacing: -1px;
+  font-weight: 700;
+}
+
+@utility text-heading-m {
+  font-size: 24px;
+  line-height: 22px;
+  letter-spacing: -0.75px;
+  font-weight: 700;
+}
+
+@utility text-heading-s {
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: -0.25px;
+  font-weight: 700;
+}
+
+@utility text-heading-s-variant {
+  font-size: 15px;
+  line-height: 15px;
+  letter-spacing: -0.25px;
+  font-weight: 700;
+}
+
+@utility text-body-1 {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: -0.1px;
+  font-weight: 500;
+}
+
+@utility text-body-2 {
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: -0.25px;
+  font-weight: 500;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans transition-colors duration-200 antialiased;
+    font-family: var(--font-sans);
+  }
+  html {
+    font-family: var(--font-sans);
+  }
+}

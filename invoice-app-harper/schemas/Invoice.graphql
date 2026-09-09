@@ -1,0 +1,14 @@
+type Invoice @table @export {
+  id: ID @primaryKey
+  createdAt: String
+  paymentDue: String
+  description: String
+  paymentTerms: Int
+  clientName: String
+  clientEmail: String
+  status: String @indexed
+  senderAddress: Address
+  clientAddress: Address
+  items: [InvoiceItem]
+  total: Float
+}
