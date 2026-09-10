@@ -1,4 +1,4 @@
-type InvoiceItem @table {
+type InvoiceItem @table(database: "invoice_app") {
   id: ID @primaryKey
   name: String
   quantity: Int

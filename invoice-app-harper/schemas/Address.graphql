@@ -1,4 +1,4 @@
-type Address @table {
+type Address @table(database: "invoice_app") {
   id: ID @primaryKey
   street: String
   city: String

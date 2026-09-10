@@ -24,6 +24,8 @@ jsResource:
   package: "@harperfast/schema-codegen"
   globalTypes: "schemas/globalTypes.d.ts"
   schemaTypes: "schemas/types.ts"
+  includeDatabases:
+    - invoice_app
 
 # Bootstraps Vite to build your frontend to HTML/JS/CSS.
 # In production it builds your app (and recompiles when files in `files` change); the `static`

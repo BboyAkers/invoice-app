@@ -1,4 +1,4 @@
-type Invoice @table @export {
+type Invoice @table(database: "invoice_app") {
   id: ID @primaryKey
   createdAt: String
   paymentDue: String
