@@ -1,19 +1,17 @@
-import { databases, tables } from "harper";
+import { databases, Resource, tables } from "harper";
 
-const BaseTable =
-  databases?.invoice_app?.Invoice ?? tables?.Invoice ?? class {};
+const { Invoice } = tables;
 
-export class Invoice extends BaseTable {
+export class InvoiceResource extends Resource {
   allowRead() {
     return true;
   }
   allowCreate() {
     return true;
   }
-  allowUpdate() {
-    return true;
-  }
-  allowDelete() {
-    return true;
+
+  async get(target?: any) {
+    const invoices = await Invoice.get(target);
+    return invoices;
   }
 }
