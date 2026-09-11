@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { StatusBadge, type InvoiceStatus } from "@/components/ui/StatusBadge";
@@ -9,17 +10,7 @@ import { EmptyInvoices } from "./EmptyInvoices";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getInvoicesQueryOptions } from "./queries/getInvoices";
 
-export interface Invoice {
-  id: string;
-  createdAt: string;
-  paymentDue: string;
-  description: string;
-  paymentTerms: number;
-  clientName: string;
-  clientEmail: string;
-  status: "paid" | "pending" | "draft";
-  total: number;
-}
+
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -132,44 +123,48 @@ export function InvoicesPage() {
       ) : filteredInvoices && filteredInvoices.length > 0 ? (
         <div className="space-y-4">
           {filteredInvoices.map((invoice) => (
-            <div
+            <Link
               key={invoice.id}
-              className="group flex flex-col sm:flex-row sm:items-center justify-between p-6 sm:px-8 sm:py-4 bg-white dark:bg-[#1E2139] rounded-[8px] border border-transparent hover:border-[#7C5DFA] shadow-[0_10px_10px_-10px_rgba(72,84,159,0.10)] transition-all duration-150 cursor-pointer gap-4"
+              to="/$invoiceId"
+              params={{ invoiceId: invoice.id }}
+              className="block"
             >
-              {/* Top / Left: ID, Due Date, Client Name */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-7">
-                <span className="font-bold text-[15px] tracking-[-0.25px]">
-                  <span className="text-[#7E88C3]">#</span>
-                  <span className="text-[#0C0E16] dark:text-white">
-                    {invoice.id}
+              <div className="group flex flex-col sm:flex-row sm:items-center justify-between p-6 sm:px-8 sm:py-4 bg-white dark:bg-[#1E2139] rounded-[8px] border border-transparent hover:border-[#7C5DFA] shadow-[0_10px_10px_-10px_rgba(72,84,159,0.10)] transition-all duration-150 cursor-pointer gap-4">
+                {/* Top / Left: ID, Due Date, Client Name */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-7">
+                  <span className="font-bold text-[15px] tracking-[-0.25px]">
+                    <span className="text-[#7E88C3]">#</span>
+                    <span className="text-[#0C0E16] dark:text-white">
+                      {invoice.id}
+                    </span>
                   </span>
-                </span>
-                <span className="text-body-1 text-[#7E88C3] dark:text-[#DFE3FA]">
-                  Due {formatDate(invoice.paymentDue)}
-                </span>
-                <span className="text-body-1 text-[#888EB0] dark:text-white">
-                  {invoice.clientName}
-                </span>
+                  <span className="text-body-1 text-[#7E88C3] dark:text-[#DFE3FA]">
+                    Due {formatDate(invoice.paymentDue)}
+                  </span>
+                  <span className="text-body-1 text-[#888EB0] dark:text-white">
+                    {invoice.clientName}
+                  </span>
+                </div>
+
+                {/* Bottom / Right: Amount, Status Badge, Arrow */}
+                <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-5">
+                  <span className="text-heading-s text-[#0C0E16] dark:text-white">
+                    £
+                    {invoice.total.toLocaleString("en-GB", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+
+                  <StatusBadge status={invoice.status} />
+
+                  <img
+                    src={arrowRightIcon}
+                    alt=""
+                    className="hidden sm:inline-block w-1.5 h-2.5 transition-transform group-hover:translate-x-1"
+                  />
+                </div>
               </div>
-
-              {/* Bottom / Right: Amount, Status Badge, Arrow */}
-              <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-5">
-                <span className="text-heading-s text-[#0C0E16] dark:text-white">
-                  £
-                  {invoice.total.toLocaleString("en-GB", {
-                    minimumFractionDigits: 2,
-                  })}
-                </span>
-
-                <StatusBadge status={invoice.status} />
-
-                <img
-                  src={arrowRightIcon}
-                  alt=""
-                  className="hidden sm:inline-block w-1.5 h-2.5 transition-transform group-hover:translate-x-1"
-                />
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (

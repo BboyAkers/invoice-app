@@ -1,12 +1,11 @@
 import type { Invoice, InvoiceFilters } from "@/features/invoices/types";
 
 export async function getInvoices(
-  filters?: InvoiceFilters,
+  _filters?: InvoiceFilters,
 ): Promise<Invoice[]> {
+  const response = await fetch("/InvoiceResource/");
 
-  const reponse = await fetch("/InvoiceResource/");
-
-  const data = await reponse.json();
+  const data = await response.json();
 
   return data;
 }

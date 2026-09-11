@@ -30,6 +30,7 @@ const buttonVariants = cva(
         sm: "h-10 px-4 text-[13px] tracking-[-0.25px]",
         lg: "h-12 px-8 text-[15px] tracking-[-0.25px]",
         icon: "size-10 rounded-full",
+        "icon-sm": "size-8 rounded-full",
       },
     },
     defaultVariants: {
