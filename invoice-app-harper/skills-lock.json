@@ -12,6 +12,12 @@
       "sourceType": "github",
       "skillPath": "harper-mcp/SKILL.md",
       "computedHash": "a0f94e58af6b4128853dc4033e246d7fde2e07416d2aaa705bfd8d984e21ea34"
+    },
+    "onboarding": {
+      "source": "launchdarkly/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/onboarding/SKILL.md",
+      "computedHash": "4b99d157eb81835cfa9609f902579ae06856bb1b977169a6ec0d6917561fa5e2"
     }
   }
 }
